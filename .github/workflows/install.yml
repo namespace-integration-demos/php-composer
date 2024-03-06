@@ -1,0 +1,33 @@
+name: Install with Composer
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on:
+        # Replace with your profile label https://namespace.so/docs/features/faster-github-actions#using-runner-profiles
+        - namespace-profile-amd64-with-caching
+    steps:
+      - name: Checkout example
+        uses: actions/checkout@v4
+        with:
+          repository: digitalocean/sample-laravel
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, dom, fileinfo
+          tools: composer:v2
+          coverage: none
+        env:
+          runner: self-hosted
+
+      - name: Setup Composer cache
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          cache: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
