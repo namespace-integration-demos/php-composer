@@ -5,9 +5,15 @@ on:
 
 jobs:
   install:
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+            # Replace with your profile label https://namespace.so/docs/features/faster-github-actions#using-runner-profiles
+          - namespace-profile-amd64-with-caching
+      fail-fast: false
     runs-on:
-      # Replace with your profile label https://namespace.so/docs/features/faster-github-actions#using-runner-profiles
-      - namespace-profile-amd64-with-caching
+      - ${{ matrix.runner }}
     steps:
       - name: Checkout example
         uses: actions/checkout@v4
